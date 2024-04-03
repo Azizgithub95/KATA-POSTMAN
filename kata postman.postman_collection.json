@@ -1,0 +1,256 @@
+{
+	"info": {
+		"_postman_id": "ccdf32a5-a1bb-410b-85dc-ada8c8849d65",
+		"name": "kata postman",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31657218"
+	},
+	"item": [
+		{
+			"name": "CREE UN REPOSITORY",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let jsonData = pm.response.json(); ",
+							"pm.test(\"Status test\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Hello-World\",\n    \"description\": \"This is your first repository\",\n    \"homepage\": \"https://github.com\",\n    \"private\": false,\n    \"has_issues\": true,\n    \"has_projects\": true,\n    \"has_wiki\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.github.com/user/repos",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"user",
+						"repos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "MODIFIER REPOSITORY",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"name\",pm.variables.replaceIn('{{$randomFirstName}}'))",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let jsonData = pm.response.json(); ",
+							"pm.test(\"Status test\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"   if(pm.response.to.have.status(200))",
+							"",
+							"   pm.test(\"Check name\", function() {",
+							"    pm.expect(jsonData.name).to.equal(pm.variables.get(\"name\"))",
+							"})",
+							"",
+							"pm.test(\"Check description\", function() {",
+							"    pm.expect(jsonData.description).to.equal(\"This is your first repository\")",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"{{name}}\",\n    \"description\": \"This is your first repository\",\n    \"homepage\": \"https://github.com\",\n    \"private\": true,\n    \"has_issues\": true,\n    \"has_projects\": true,\n    \"has_wiki\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.github.com/repos/Azizgithub95/dernier-kata-postman",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"repos",
+						"Azizgithub95",
+						"dernier-kata-postman"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SUPPRIMER REPOSITORY",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://api.github.com/repos/Azizgithub95/dernier-kata-postman",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"repos",
+						"Azizgithub95",
+						"dernier-kata-postman"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "VERIFIER LISTE REPOS",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let jsonData = pm.response.json();",
+							"",
+							"pm.test('Status test', function () {",
+							"    pm.response.to.have.status(200);",
+							"})",
+							"",
+							"",
+							"pm.test(\"Check name\", function () {",
+							"    pm.expect(jsonData[0].name).to.equal(\"POSTMAN\");",
+							"});",
+							"",
+							"",
+							"",
+							"pm.test(\"Check name\", function () {",
+							"    pm.expect(jsonData.length).to.not.equal(\"dernier-kata-postman\");",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.github.com/users/Azizgithub95/repos",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"users",
+						"Azizgithub95",
+						"repos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "VERIFIER REPOS DELETE",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status test', function () {",
+							"    pm.response.to.have.status(404);",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.github.com/repos/Azizgithub95/dernier-kata-postman",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"repos",
+						"Azizgithub95",
+						"dernier-kata-postman"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "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",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
